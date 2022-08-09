@@ -1,0 +1,53 @@
+.note {
+    position: absolute;
+    left: unset;
+    top: calc(50% - 13px);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #c30;
+    background-color: #f70;
+}
+
+.bar {
+    position: absolute;
+    left: unset;
+    top: 0;
+    width: 26px;
+    height: 100%;
+    border-left: white solid 8px;
+    border-right: white solid 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.standby {
+    visibility: hidden;
+    left: 100%;
+    transition: none;
+}
+
+.flowing {
+    visibility: visible;
+    left: -100%;
+    transition-property: left;
+    transition-timing-function: linear;
+    transition-duration: unset;
+    /* animation-name: flow;
+    animation-timing-function: linear;
+    animation-duration: unset; */
+}
+
+/* @keyframes flow {
+    from {
+        visibility: visible;
+        left: 100%;
+    }
+    50% {
+        visibility: visible;
+        left: 0;
+    }
+    to {
+        visibility: hidden;
+        left: -100%;
+    }
+} */
