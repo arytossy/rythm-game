@@ -26,3 +26,77 @@
     border: 3px solid #aaa;
     background-color: transparent;
 }
+
+.hit-effect {
+    position: absolute;
+    background-color: transparent;
+    animation: hit-effect-spread .3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.hit-effect .spark {
+    position: absolute;
+    width: 6px;
+    height: 16px;
+    border-radius: 50%;
+    border-top: 8px solid orange;
+    border-right: 3px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 3px solid transparent;
+}
+
+.hit-effect .spark:nth-child(1) {
+    left: calc(50% - 3px);
+    top: 0;
+}
+.hit-effect .spark:nth-child(2) {
+    left: 73%;
+    top: 6%;
+    transform: rotateZ(45deg);
+}
+.hit-effect .spark:nth-child(3) {
+    left: calc(100% - 11px);
+    top: calc(50% - 8px);
+    transform: rotateZ(90deg);
+}
+.hit-effect .spark:nth-child(4) {
+    left: 73%;
+    top: 67%;
+    transform: rotateZ(135deg);
+}
+.hit-effect .spark:nth-child(5) {
+    left: calc(50% - 3px);
+    top: calc(100% - 16px);
+    transform: rotateZ(180deg);
+}
+.hit-effect .spark:nth-child(6) {
+    left: 15%;
+    top: 63%;
+    transform: rotateZ(225deg);
+}
+.hit-effect .spark:nth-child(7) {
+    left: 5px;
+    top: calc(50% - 8px);
+    transform: rotateZ(270deg);
+}
+.hit-effect .spark:nth-child(8) {
+    left: 15%;
+    top: 6%;
+    transform: rotateZ(315deg);
+}
+
+@keyframes hit-effect-spread {
+    from {
+        visibility: visible;
+        left: -3px;
+        top: calc(50% - 16px);
+        width: 32px;
+        height: 32px;
+    }
+    to {
+        visibility: hidden;
+        left: -13px;
+        top: calc(50% - 26px);
+        width: 52px;
+        height: 52px;
+    }
+}

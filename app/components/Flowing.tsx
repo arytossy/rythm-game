@@ -4,7 +4,7 @@ import "./Flowing.css";
 
 export type FlowingProps = {
     id: string,
-    status: null | "standby" | "flowing",
+    status: null | "standby" | "flowing" | "hit",
     duration: null | number,
     // onTerminate: (id: string) => void,
 }
@@ -32,6 +32,7 @@ export default function Flowing(props: MetaProps & FlowingProps) {
             className={`${props.shape} ${props.status}`}
             style={{ transitionDuration: `${(props.duration ?? 0) * 2}ms` }}
             onTransitionEnd={handleMoveEnd}
+            onAnimationEnd={handleMoveEnd}
         />
     );
 }

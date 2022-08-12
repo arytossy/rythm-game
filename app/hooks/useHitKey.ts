@@ -1,22 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export default function useHitKey(keyCode: string) {
-
-    const [hit, setHit] = useState(0);
+export default function useHitKey(keyCode: string, onHit: () => void) {
 
     function handleKeyDownOnDocument(event: KeyboardEvent) {
         if (event.repeat) return;
         if (event.code == keyCode) {
             event.preventDefault();
-            setHit(Date.now());
+            onHit();
         }
     }
 
-    document.addEventListener("keydown", handleKeyDownOnDocument);
-
     useEffect(() => {
+        document.addEventListener("keydown", handleKeyDownOnDocument);
         return () => document.removeEventListener("keydown", handleKeyDownOnDocument);
     });
-
-    return hit;
 }

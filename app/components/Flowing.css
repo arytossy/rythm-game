@@ -37,6 +37,26 @@
     animation-duration: unset; */
 }
 
+.hit {
+    opacity: .5;
+    animation: hit .3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes hit {
+    from {
+        visibility: visible;
+        opacity: 0.5;
+        left: 0;
+        top: calc(50% - 13px);
+    }
+    to {
+        visibility: hidden;
+        opacity: 0.5;
+        left: 0;
+        top: calc(50% - 43px);
+    }
+}
+
 /* @keyframes flow {
     from {
         visibility: visible;

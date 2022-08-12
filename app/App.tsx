@@ -9,7 +9,7 @@ import { BeatInfo } from "./types/BeatInfo";
 function App() {
 
     // the beats master of this music.
-    const [beats] = useState<BeatInfo[]>(testBeats[3] ?? []);
+    const [beats] = useState<BeatInfo[]>(testBeats[0] ?? []);
 
     const [ready, setReady] = useState(false);
     const [playing, setPlaying] = useState(false);

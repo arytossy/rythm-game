@@ -9,7 +9,7 @@ export default function useFlowManager(beats: BeatInfo[]) {
     }>;
 
     type StatusMap = {
-        [id: string]: "standby" | "flowing"
+        [id: string]: "standby" | "flowing" | "hit"
     };
 
     type DurationMap = {
@@ -40,6 +40,8 @@ export default function useFlowManager(beats: BeatInfo[]) {
     const [cursor, setCursor] = useState(0);
 
     const [loaded, setLoaded] = useState(false);
+
+    let _tmpStatuses = { ...statuses };
 
     // initialize when beats updated.
     useEffect(() => {
@@ -102,56 +104,6 @@ export default function useFlowManager(beats: BeatInfo[]) {
 
     }, [loaded]);
 
-    function getPreCount() {
-        const firstFlowTime = queue[0]?.time ?? 0;
-        return firstFlowTime < 0 ? -firstFlowTime : 0;
-    }
-
-    function getPreviousTime() {
-        return queue[cursor - 1]?.time ?? 0;
-    }
-
-    function getNextTime() {
-        return queue[cursor]?.time ?? 0;
-    }
-
-    function flowNext() {
-        const target = queue[cursor];
-        if (!target) return 0;
-        const changed = target.items.reduce((result: StatusMap, item) => {
-            result[item.id] = "flowing";
-            return result;
-        }, {});
-        setStatuses({ ...statuses, ...changed });
-        setCursor(cursor + 1);
-        return target.time;
-    }
-
-    function getStatus(id: string) {
-        return statuses[id] ?? "standby";
-    }
-
-    function getDuration(id: string) {
-        return durations[id] ?? 0;
-    }
-
-    function reset() {
-        const copied = {...statuses};
-        for (const id in copied) {
-            copied[id] = "standby";
-        }
-        setCursor(0);
-        setStatuses(copied);
-    }
-
-    function hasNext() {
-        return queue[cursor] ? true : false;
-    }
-
-    function beginning() {
-        return cursor == 0;
-    }
-
     function getBarId(beatIndex: number) {
         return `bar_${beatIndex}`;
     }
@@ -160,27 +112,81 @@ export default function useFlowManager(beats: BeatInfo[]) {
         return `note_${beatIndex}_${noteIndex}`;
     }
 
-    function getBarsInReverseOrder() {
-        return bars.slice().reverse();
-    }
-
-    function getNotesInReverseOrder() {
-        return notes.slice().reverse();
-    }
-
     return {
         loaded: loaded,
         cursor: cursor,
-        getBarsInReverseOrder: getBarsInReverseOrder,
-        getNotesInReverseOrder: getNotesInReverseOrder,
-        getPreCount: getPreCount,
-        getStatus: getStatus,
-        getDuration: getDuration,
-        getPreviousTime: getPreviousTime,
-        getNextTime: getNextTime,
-        beginning: beginning,
-        hasNext: hasNext,
-        flowNext: flowNext,
-        reset: reset,
+        getBarId: getBarId,
+        getNoteId: getNoteId,
+
+        getBarsInReverseOrder() {
+            return bars.slice().reverse();
+        },
+
+        getNotesInReverseOrder() {
+            return notes.slice().reverse();
+        },
+
+        getPreCount() {
+            const firstFlowTime = queue[0]?.time ?? 0;
+            return firstFlowTime < 0 ? -firstFlowTime : 0;
+        },
+
+        getFirstFlowDuration() {
+            const firstItemId = queue[0]?.items[0]?.id;
+            if (firstItemId) {
+                return durations[firstItemId] ?? 0;
+            } else {
+                return 0;
+            }
+        },
+
+        getStatus(id: string) {
+            return statuses[id] ?? "standby";
+        },
+
+        getDuration(id: string) {
+            return durations[id] ?? 0;
+        },
+
+        getPreviousTime() {
+            return queue[cursor - 1]?.time ?? 0;
+        },
+
+        getNextTime() {
+            return queue[cursor]?.time ?? 0;
+        },
+
+        beginning() {
+            return cursor == 0;
+        },
+
+        hasNext() {
+            return queue[cursor] ? true : false;
+        },
+
+        flowNext() {
+            const target = queue[cursor];
+            if (!target) return 0;
+            target.items.forEach(item => {
+                _tmpStatuses[item.id] = "flowing";
+            });
+            setStatuses(_tmpStatuses);
+            setCursor(cursor + 1);
+            return target.time;
+        },
+
+        hit(id: string) {
+            _tmpStatuses[id] = "hit";
+            setStatuses(_tmpStatuses);
+        },
+
+        reset() {
+            const copied = { ...statuses };
+            for (const id in copied) {
+                copied[id] = "standby";
+            }
+            setCursor(0);
+            setStatuses(copied);
+        },
     }
 }
